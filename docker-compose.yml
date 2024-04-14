@@ -1,0 +1,62 @@
+version: '3.9'
+
+services:
+  service_db:
+    image: postgres:latest
+    ports:
+      - 5434:5434
+    environment:
+      POSTGRES_DB: service_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+      PGPORT: 5434
+    restart: always
+    volumes:
+      - service_db_data:/var/lib/postgresql/data
+      - service_db_config:/etc/postgresql
+
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: banner_service
+    restart: always
+    environment:
+      - POSTGRES_USER=${DB_USER}  
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+      - DATABASE_HOST=${DB_HOST} 
+    ports:
+      - '8008:8008'
+    depends_on:
+      - service_db
+      - redis
+  
+  redis:
+    image: 'bitnami/redis:7.2'
+    ports:
+      - "6379:6379"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - redis_data:/bitnami/redis/data
+
+  pgadmin:
+    container_name: pgadmin4_container_avito
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  service_db_data:
+  service_db_config:
+  redis_data:
+  pgadmin-data:

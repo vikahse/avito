@@ -1,0 +1,72 @@
+Sign up:
+curl -i -X POST -H "Content-Type: application/json" -d '{"name":"kate","password":"avito2", "is_admin":false}' http://localhost:8008/signup
+curl -i -X POST -H "Content-Type: application/json" -d '{"name":"vika","password":"avito1", "is_admin":true}' http://localhost:8008/signup
+
+Login:
+curl -i -X POST -H "Content-Type: application/json" -d '{"name":"vika","password":"avito1"}' http://localhost:8008/login
+curl -i -X POST -H "Content-Type: application/json" -d '{"name":"kate","password":"avito2"}' http://localhost:8008/login
+curl -i -X POST -H "Content-Type: application/json" -d '{"name":"admin","password":"avito2"}' http://localhost:8008/login
+
+Create Banner:
+code 201:
+curl -X POST http://localhost:8008/banner \
+-H "Content-Type: application/json" \
+-H "token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTMwNTE1ODQsImlzcyI6IkJhbm5lclNlcnZpY2UiLCJ1c2VyX2lkIjoxLCJuYW1lIjoidmlrYSIsImlzX2FkbWluIjp0cnVlfQ.nxX1YlRjjEXw4Pta4b1iWy9klZ5WmenRMCeG8Nx5HJk" \
+-d '{"tag_ids": [2, 56], "feature_id": 23, "content": {"title": "Example 2", "text": "Example 2", "url": "https://example2.com"}, "is_active": true}'
+code 400:
+curl -X POST http://localhost:8008/banner \
+-H "Content-Type: application/json" \
+-H "token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJuYW1lIjoidmlrYSIsImlzX2FkbWluIjp0cnVlLCJleHAiOjE3MTI3ODE4OTQsImlzcyI6IkJhbm5lclNlcnZpY2UifQ.XvcHs4idIz9MrX4iQOs2O4XBs5UqWvo8SR3wRrB3hy8" \
+-d '{"tagIds": [2, 56], "feature_id": 23, "content": {"title": "Example 2", "text": "Example 2", "url": "https://example2.com"}, "is_active": true}'
+code 401:
+curl -X POST http://localhost:8008/banner \
+-H "Content-Type: application/json" \
+-d '{"tag_ids": [2, 56], "feature_id": 23, "content": {"title": "Example 2", "text": "Example 2", "url": "https://example2.com"}, "is_active": true}'
+code 403:
+curl -X POST http://localhost:8008/banner \
+-H "Content-Type: application/json" \
+-H "token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjozLCJuYW1lIjoia2F0ZSIsImlzX2FkbWluIjpmYWxzZSwiZXhwIjoxNzEyNzgyMTcwLCJpc3MiOiJCYW5uZXJTZXJ2aWNlIn0.xeCYYdEvhQJUFV_n4N2BasFcfOo8Uhzw9tdgI8DZb20" \
+-d '{"tag_ids": [2, 56], "feature_id": 23, "content": {"title": "Example 2", "text": "Example 2", "url": "https://example2.com"}, "is_active": true}'
+
+User Banner:
+code 200:
+curl -X GET http://localhost:8008/user_banner \
+-H "Content-Type: application/json" \
+-H "token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTMxMTIyNTIsImlzcyI6IkJhbm5lclNlcnZpY2UiLCJ1c2VyX2lkIjoxMDAwLCJuYW1lIjoiYWRtaW4iLCJpc19hZG1pbiI6dHJ1ZX0.3R2G5g4UTuAOJ8SlDIyJGPQTv7tCtxiE0Go0ELD065w"\
+-d '{"tag_id": 2, "feature_id": 23, "use_last_version": true}'
+
+code 400:
+curl -X GET http://localhost:8008/user_banner \
+-H "Content-Type: application/json" \
+-H "token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJuYW1lIjoidmlrYSIsImlzX2FkbWluIjp0cnVlLCJleHAiOjE3MTI4NDQxMTksImlzcyI6IkJhbm5lclNlcnZpY2UifQ.OaHkb-nBliXyC1nThDzEShhvTp8QoR-fwl5K3t8Z_LA" \
+-d '{"tag_ids": 2, "feature_id": 23, "use_last_version": false}'
+code 401:
+curl -X GET http://localhost:8008/user_banner \
+-H "Content-Type: application/json" \
+-d '{"tag_id": 2, "feature_id": 23, "use_last_version": false}'
+code 403:
+curl -X GET http://localhost:8008/user_banner \
+-H "Content-Type: application/json" \
+-H "token: wweyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJuYW1lIjoidmlrYSIsImlzX2FkbWluIjp0cnVlLCJleHAiOjE3MTI4NDQxMTksImlzcyI6IkJhbm5lclNlcnZpY2UifQ.OaHkb-nBliXyC1nThDzEShhvTp8QoR-fwl5K3t8Z_LA" \
+-d '{"tag_id": 2, "feature_id": 23, "use_last_version": false}'
+code 404:
+curl -X GET http://localhost:8008/user_banner \
+-H "Content-Type: application/json" \
+-H "token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJuYW1lIjoidmlrYSIsImlzX2FkbWluIjp0cnVlLCJleHAiOjE3MTI4NDY3MjAsImlzcyI6IkJhbm5lclNlcnZpY2UifQ.LNuX_7Nlj586cT9JWp3dqCKDdmM63J7qbco8jlHPmk0" \
+-d '{"tag_id": 289, "feature_id": 123, "use_last_version": false}'
+
+Banner GET:
+curl -X GET http://localhost:8008/banner \
+-H "Content-Type: application/json" \
+-H "token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTMxMDM5MDYsImlzcyI6IkJhbm5lclNlcnZpY2UiLCJ1c2VyX2lkIjoxLCJuYW1lIjoidmlrYSIsImlzX2FkbWluIjp0cnVlfQ.ejXg0wVEg0Jz76N9dCjBW527HM8i1TKu25QLrlddFIE"  \
+-d '{"tag_id": 2, "feature_id" : 23, "offset" : 0, "limit" : 23}'
+
+Update Banner:
+curl -X PATCH http://localhost:8008/banner/5 \
+-H "Content-Type: application/json" \
+-H "token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTMwNTE1ODQsImlzcyI6IkJhbm5lclNlcnZpY2UiLCJ1c2VyX2lkIjoxLCJuYW1lIjoidmlrYSIsImlzX2FkbWluIjp0cnVlfQ.nxX1YlRjjEXw4Pta4b1iWy9klZ5WmenRMCeG8Nx5HJk"  \
+-d '{"tag_ids": [2], "feature_id": 23, "content" : {"NNNNNNNNN":"KKKKKK"}, "is_active" : true}'
+
+Delete Banner:
+curl -X DELETE http://localhost:8008/banner/3 \
+-H "token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJuYW1lIjoidmlrYSIsImlzX2FkbWluIjp0cnVlLCJleHAiOjE3MTI4NzM5NDMsImlzcyI6IkJhbm5lclNlcnZpY2UifQ.A8-s1BFPFaocVVwsRbnoUx0tKhOH9GcIkfqHC0bvHo0"  \
